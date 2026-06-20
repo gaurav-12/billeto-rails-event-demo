@@ -15,17 +15,9 @@ class EventsController < ApplicationController
   end
 
   def sync
-    # TODO: Sync from API
-
-    # respond_to do |format|
-    #   if @event.save
-    #     format.html { redirect_to @event, notice: "Event was successfully created." }
-    #     format.json { render :show, status: :created, location: @event }
-    #   else
-    #     format.html { render :new, status: :unprocessable_content }
-    #     format.json { render json: @event.errors, status: :unprocessable_content }
-    #   end
-    # end
+    response = BilletoApi.sync_public_events
+    format.json { render json: response, status: :ok}
+    # TODO: Respond based on response if its error or success
   end
 
   def upvote
