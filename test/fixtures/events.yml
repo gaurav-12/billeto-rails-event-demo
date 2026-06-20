@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  billeto_id: MyString
+  title: MyString
+  description: MyString
+  url: MyString
+  image_link: MyString
+  available: false
+  organizer_name: MyString
+  price: MyString
+  currency: MyString
+  category: MyString
+  type: 
+  start_date: 2026-06-20 18:29:37
+  end_date: 2026-06-20 18:29:37
+
+two:
+  billeto_id: MyString
+  title: MyString
+  description: MyString
+  url: MyString
+  image_link: MyString
+  available: false
+  organizer_name: MyString
+  price: MyString
+  currency: MyString
+  category: MyString
+  type: 
+  start_date: 2026-06-20 18:29:37
+  end_date: 2026-06-20 18:29:37
