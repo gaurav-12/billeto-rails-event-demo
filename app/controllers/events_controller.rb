@@ -1,5 +1,9 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [ :destroy, :upvote, :downvote]
+  include BilletoApi
+
+  before_action :require_clerk_session!, except: [ :index ]
+  before_action :set_event, only: [ :destroy, :upvote, :downvote ]
+  before_action :set_user_vote, only: [ :upvote, :downvote ]
 
   def index
     @events = Event.all
@@ -15,22 +19,56 @@ class EventsController < ApplicationController
   end
 
   def sync
-    response = BilletoApi.sync_public_events
-    format.json { render json: response, status: :ok}
-    # TODO: Respond based on response if its error or success
+    response = sync_public_events
+    if response["success"]
+      render json: response, status: :ok
+    else
+      render json: response, status: :unprocessable_entity
+    end
   end
 
   def upvote
-    # TODO: Implement it
+    # TODO: Extract redundant logics of upvote and downvote to common method
+    if @user_vote
+      @user_vote.update!(upvote: true)
+    else
+      vote = UserVote.new(user_id: clerk.user.id, event: @event, upvote: true)
+      vote.save!
+    end
+    respond_to do |format|
+      format.html { redirect_to root_path, notice: "Successfully upvoted the event!" }
+    end
   end
 
   def downvote
-    # TODO: Implement it
+    if @user_vote
+      @user_vote.update!(upvote: false)
+    else
+      vote = UserVote.new(user_id: clerk.user.id, event: @event, upvote: false)
+      vote.save!
+    end
+    respond_to do |format|
+      format.html { redirect_to root_path, notice: "Successfully downvoted the event!" }
+    end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event
-      @event = Event.find(params[:id])
+      @event = Event.find(params[:event_id])
+    end
+
+    def set_user_vote
+      @user_vote = UserVote.find_by(user_id: clerk.user.id, event: @event)
+    end
+
+    def require_clerk_session!
+      unless clerk.session
+        respond_to do |format|
+          # TODO: Configure redirect URL through environment variables
+          format.html { redirect_to "#{clerk.sign_in_url}?redirect_url=http://localhost:3000", allow_other_host: true }
+          format.json { render json: { error: "Unauthorized" }, status: :unauthorized }
+        end
+      end
     end
 end

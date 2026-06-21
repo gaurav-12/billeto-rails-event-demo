@@ -11,7 +11,6 @@ class CreateEvents < ActiveRecord::Migration[7.2]
       t.string :price
       t.string :currency
       t.string :category
-      t.string :type
       t.datetime :start_date
       t.datetime :end_date
 

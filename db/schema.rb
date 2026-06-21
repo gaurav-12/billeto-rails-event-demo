@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_20_125937) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_21_220943) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,10 +25,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_20_125937) do
     t.string "price"
     t.string "currency"
     t.string "category"
-    t.string "type"
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "location"
+  end
+
+  create_table "user_votes", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.bigint "event_id"
+    t.boolean "upvote", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_user_votes_on_event_id"
   end
 end

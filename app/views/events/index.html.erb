@@ -5,13 +5,27 @@
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
+  <div class="flex flex-row bg-gray-100 p-2 mb-4 justify-between">
+    <h3 class="font-bold text-xl">Billeto Public Events</h3>
+    <% if clerk.session %>
+      <p> Signed in as <span class="font-bold"><%= clerk.user.email_addresses.first.email_address %></span> </p>
+    <% else %>
+      <p class="text-lg font-bold text-blue-500"> <%= link_to 'Signin', "#{clerk.sign_in_url}?redirect_url=http://localhost:3000" %> |
+      <%= link_to 'Signup', "#{clerk.sign_up_url}?redirect_url=http://localhost:3000" %> </p>
+    <% end %>
+  </div>
+
   <div id="events" class="min-w-full divide-y divide-gray-200 space-y-5">
     <% if @events.any? %>
       <% @events.each do |event| %>
         <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
           <%= render event %>
+          <%# TODO: Disable buttons if already voted by current user %>
           <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <%= button_to "Destroy", event, method: :delete, class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+            <%= button_to "Upvote (#{event.upvotes})", event_upvote_path(event), disabled: !clerk.session,
+            class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white #{!clerk.session ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-600 cursor-pointer'} font-medium" %>
+            <%= button_to "Downvote (#{event.downvotes})", event_downvote_path(event), disabled: !clerk.session,
+            class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white #{!clerk.session ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 cursor-pointer'} font-medium" %>
           </div>
         </div>
       <% end %>
