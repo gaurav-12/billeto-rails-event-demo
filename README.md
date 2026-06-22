@@ -18,6 +18,9 @@
 6. Update `.env` with the appropriate values for Billeto and Clerk APIs
 7. Update `database.yml` with your local Postgres credentials
 
+## Start Server
+Initially start the server using `bin/dev` command. It uses `foreman` to initialize Rails server alongside the watch server for Tailwind. Once the CSS is loaded initially, you can go back to `rails s`.
+
 ## Seed events
 Call `events/sync` endpoint from Postman, Insomnia or any other API client, to sync public events from Billeto to local DB. **Note** that the endpoint currently requires "bearer" authentication from Clerk. If you wish to sync events without authentication then it can be added as exception in before action of events controller.
 
