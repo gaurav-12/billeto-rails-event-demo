@@ -34,7 +34,7 @@ class EventsController < ApplicationController
       @user_vote.update!(upvote: true)
     else
       @user_vote = UserVote.new(user_id: clerk.user.id, event: @event, upvote: true)
-      vote.save!
+      @user_vote.save!
     end
     respond_to do |format|
       format.html { redirect_to root_path, notice: "Successfully upvoted the event!" }
@@ -46,7 +46,7 @@ class EventsController < ApplicationController
       @user_vote.update!(upvote: false)
     else
       @user_vote = UserVote.new(user_id: clerk.user.id, event: @event, upvote: false)
-      vote.save!
+      @user_vote.save!
     end
     respond_to do |format|
       format.html { redirect_to root_path, notice: "Successfully downvoted the event!" }
@@ -79,6 +79,8 @@ class EventsController < ApplicationController
       event = event_name.new(data: { event_id: @event.billeto_id, upvote: @user_vote.upvote })
 
       # publishing an event for a specific stream
-      event_store.publish(event, stream_name: stream_name)
+      Rails.configuration.event_store.tap do |store|
+        store.publish(event, stream_name: stream_name)
+      end
     end
 end

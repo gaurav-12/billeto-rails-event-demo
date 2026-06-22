@@ -6,8 +6,8 @@ class EventVotingProjector
     Turbo::StreamsChannel.broadcast_replace_to(
       "voting_count",
       target: "votes_#{event_id}",
-      partial: "event/vote",
-      locals: { upvotes:  event.upvotes, downvotes: event.downvotes, event_id: }
+      partial: "events/vote",
+      locals: { upvotes:  event.upvotes, downvotes: event.downvotes, event: }
     )
   end
 end

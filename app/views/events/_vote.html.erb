@@ -1,8 +1,8 @@
 <%# TODO: Disable buttons if already voted by current user %>
 <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2"
-id="votes_<%= event_id %>">
-    <%= button_to "Upvote (#{upvotes})", event_upvote_path(event), disabled: !clerk.session,
-    class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white #{!clerk.session ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-600 cursor-pointer'} font-medium" %>
-    <%= button_to "Downvote (#{downvotes})", event_downvote_path(event), disabled: !clerk.session,
-    class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white #{!clerk.session ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 cursor-pointer'} font-medium" %>
+id="votes_<%= event.billeto_id %>">
+    <%= button_to "Upvote (#{upvotes})", event_upvote_path(event),
+    class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-green-600 cursor-pointer font-medium" %>
+    <%= button_to "Downvote (#{downvotes})", event_downvote_path(event),
+    class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 cursor-pointer font-medium" %>
 </div>
