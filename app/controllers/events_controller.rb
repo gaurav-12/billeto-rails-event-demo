@@ -4,6 +4,7 @@ class EventsController < ApplicationController
   before_action :require_clerk_session!, except: [ :index ]
   before_action :set_event, only: [ :destroy, :upvote, :downvote ]
   before_action :set_user_vote, only: [ :upvote, :downvote ]
+  after_action :emit_voting_event, only: [ :upvote, :downvote ]
 
   def index
     @events = Event.all
@@ -32,7 +33,7 @@ class EventsController < ApplicationController
     if @user_vote
       @user_vote.update!(upvote: true)
     else
-      vote = UserVote.new(user_id: clerk.user.id, event: @event, upvote: true)
+      @user_vote = UserVote.new(user_id: clerk.user.id, event: @event, upvote: true)
       vote.save!
     end
     respond_to do |format|
@@ -44,7 +45,7 @@ class EventsController < ApplicationController
     if @user_vote
       @user_vote.update!(upvote: false)
     else
-      vote = UserVote.new(user_id: clerk.user.id, event: @event, upvote: false)
+      @user_vote = UserVote.new(user_id: clerk.user.id, event: @event, upvote: false)
       vote.save!
     end
     respond_to do |format|
@@ -70,5 +71,14 @@ class EventsController < ApplicationController
           format.json { render json: { error: "Unauthorized" }, status: :unauthorized }
         end
       end
+    end
+
+    def emit_voting_event
+      stream_name = "event_#{@event.billeto_id}"
+      event_name = (@user_vote.upvote ? "EventUpvoted" : "EventDownvoted").constantize
+      event = event_name.new(data: { event_id: @event.billeto_id, upvote: @user_vote.upvote })
+
+      # publishing an event for a specific stream
+      event_store.publish(event, stream_name: stream_name)
     end
 end

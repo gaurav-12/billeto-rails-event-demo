@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  resources :events, only: [:index, :destroy] do
+  mount RailsEventStore::Browser => "/res" if Rails.env.development?
+  resources :events, only: [ :index, :destroy ] do
     collection do
       post :sync
     end

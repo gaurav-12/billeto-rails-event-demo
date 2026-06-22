@@ -1,5 +1,7 @@
 <% content_for :title, "Events" %>
 
+<%= turbo_stream_from "voting_count" %>
+
 <div class="w-full">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
@@ -20,13 +22,7 @@
       <% @events.each do |event| %>
         <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
           <%= render event %>
-          <%# TODO: Disable buttons if already voted by current user %>
-          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <%= button_to "Upvote (#{event.upvotes})", event_upvote_path(event), disabled: !clerk.session,
-            class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white #{!clerk.session ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-600 cursor-pointer'} font-medium" %>
-            <%= button_to "Downvote (#{event.downvotes})", event_downvote_path(event), disabled: !clerk.session,
-            class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white #{!clerk.session ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 cursor-pointer'} font-medium" %>
-          </div>
+          <%= render vote, upvotes: event.upvotes, downvotes: event.downvotes, event_id: event.billeto_id %>
         </div>
       <% end %>
     <% else %>
