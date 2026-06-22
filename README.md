@@ -1,4 +1,6 @@
 # Billeto Rails Event Demo
+<img width="1316" height="446" alt="image" src="https://github.com/user-attachments/assets/f1dba87c-186d-4ca6-befb-7980ed22e4b6" />
+<img width="1347" height="611" alt="image" src="https://github.com/user-attachments/assets/27faf4cb-561d-432a-a7c2-254c02908b97" />
 
 ## Environment/Requirements
 **Note** that following were used for the development of this app, and can possibly be updated too
