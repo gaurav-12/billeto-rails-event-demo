@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   include BilletoApi
 
+  # INFO: Add :sync here in case you want to seed the data without authenticating from Clerk
   before_action :require_clerk_session!, except: [ :index ]
   before_action :set_event, only: [ :destroy, :upvote, :downvote ]
   before_action :set_user_vote, only: [ :upvote, :downvote ]
